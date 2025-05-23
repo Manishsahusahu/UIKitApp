@@ -21,12 +21,25 @@ class SearchVC: UIViewController {
         configureLogoImageView()
         configureTextField()
         configureCTAButton()
+        createDismissKeyboardTapGesture()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         navigationController?.isNavigationBarHidden = true
+    }
+    
+    private func createDismissKeyboardTapGesture() {
+        let tap = UITapGestureRecognizer(target: view, action: #selector(UIView.endEditing))
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc private func pushFollowersVC() {
+        let followersVC = FollowersListVC()
+        followersVC.username = userNameTextField.text ?? ""
+        followersVC.title = userNameTextField.text ?? ""
+        navigationController?.pushViewController(followersVC, animated: true)
     }
     
     private func configureLogoImageView() {
@@ -44,6 +57,7 @@ class SearchVC: UIViewController {
     
     private func configureTextField() {
         view.addSubview(userNameTextField)
+        userNameTextField.delegate = self
         
         NSLayoutConstraint.activate([
             userNameTextField.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 48),
@@ -55,6 +69,7 @@ class SearchVC: UIViewController {
     
     private func configureCTAButton() {
         view.addSubview(calltoActionButton)
+        calltoActionButton.addTarget(self, action: #selector(pushFollowersVC), for: .touchUpInside)
         
         NSLayoutConstraint.activate([
             calltoActionButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -48),
@@ -62,5 +77,12 @@ class SearchVC: UIViewController {
             calltoActionButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
             calltoActionButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
         ])
+    }
+}
+
+extension SearchVC: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        pushFollowersVC()
+        return true
     }
 }
