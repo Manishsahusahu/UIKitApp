@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = createTabbar()
         window?.makeKeyAndVisible()
         
-        fconfigureNavigationBar()
+        configureNavigationBar()
     }
     
     func createSearchNC() -> UINavigationController {
