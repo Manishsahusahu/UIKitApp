@@ -39,7 +39,7 @@ class SearchVC: UIViewController {
         guard let username = userNameTextField.text, !username.isEmpty else {
             PresentGFAlertOnMainThread(title: "Empty Username", message: "Kindly enter the username, we need to know, whom to look for.", buttonTitle: "OK")
             
-            return 
+            return
         }
         
         let followersVC = FollowersListVC()
