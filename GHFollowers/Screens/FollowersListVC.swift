@@ -15,7 +15,21 @@ class FollowersListVC: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
-        navigationController?.isNavigationBarHidden = false
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        
+        NetworkManager.shared.getFollowers(for: username, page: 1) { followers,error in
+            guard let followers else {
+                if let error {
+                    self.PresentGFAlertOnMainThread(
+                        title: "Could not fetch followers",
+                        message: error,
+                        buttonTitle: "OK"
+                    )
+                }
+                return
+            }
+            
+            print(followers)
+        }
     }
-    
 }
