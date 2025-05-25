@@ -10,6 +10,7 @@ import UIKit
 class FollowersListVC: UIViewController {
     
     var username: String = ""
+    var collectionView: UICollectionView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,5 +33,13 @@ class FollowersListVC: UIViewController {
             print("Followers fetched successfully")
             print(followers)
         }
+    }
+    
+    private func configureCollectionView() {
+        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: UICollectionViewLayout())
+        view.addSubview(collectionView)
+        
+        collectionView.backgroundColor = .systemPink
+        collectionView.register(FollowerCell.self, forCellWithReuseIdentifier: FollowerCell.reuseId)
     }
 }
