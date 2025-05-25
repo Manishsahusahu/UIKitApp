@@ -44,6 +44,8 @@ class NetworkManager {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let followers = try decoder.decode([Follower].self, from: data)
+                
+                completion(followers, nil)
             } catch {
                 completion(nil, error.localizedDescription)
             }

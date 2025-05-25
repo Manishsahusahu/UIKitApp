@@ -29,6 +29,7 @@ class FollowersListVC: UIViewController {
                 return
             }
             
+            print("Followers fetched successfully")
             print(followers)
         }
     }
