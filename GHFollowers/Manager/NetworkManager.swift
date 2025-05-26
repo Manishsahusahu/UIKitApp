@@ -20,7 +20,7 @@ class NetworkManager {
         page: Int,
          completion: @escaping ([Follower]?, String?) -> Void
     ) {
-        let urlString = "\(baseUrl)\(username)/followers?per_page=100$page=\(page)"
+        let urlString = "\(baseUrl)\(username)/followers?per_page=100&page=\(page)"
         guard let url = URL(string: urlString) else {
             completion(nil, "URL request failed. Please try again later.")
             return
