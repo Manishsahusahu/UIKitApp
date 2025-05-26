@@ -48,7 +48,10 @@ class FollowersListVC: UIViewController {
     }
     
     private func getFollowers(page: Int) {
+        showLoadingView()
+        
         NetworkManager.shared.getFollowers(for: username, page: page) { [weak self] followers,error in
+            self?.dismissLoadingView()
             guard let followers else {
                 if let error {
                     self?.PresentGFAlertOnMainThread(
