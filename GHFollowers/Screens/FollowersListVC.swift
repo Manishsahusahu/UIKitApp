@@ -16,6 +16,7 @@ class FollowersListVC: UIViewController {
     var username: String = ""
     var followers = [Follower]()
     var page = 1
+    var hasMoreFollowers: Bool = true
     
     var collectionView: UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, Follower>!
@@ -59,6 +60,8 @@ class FollowersListVC: UIViewController {
                 return
             }
             
+            if followers.count < 100 { self?.hasMoreFollowers = false }
+            
             self?.followers.append(contentsOf: followers)
             self?.updateData()
         }
@@ -85,6 +88,13 @@ class FollowersListVC: UIViewController {
             self.dataSource.apply(snapshot, animatingDifferences: true)
         }
     }
+    
+    private func getMoreFollowers() {
+        guard hasMoreFollowers else { return }
+        
+        page += 1
+        getFollowers(page: page)
+    }
 }
 
 extension FollowersListVC: UICollectionViewDelegate {
@@ -94,8 +104,7 @@ extension FollowersListVC: UICollectionViewDelegate {
         let frameHeight = scrollView.frame.height
         
         if offsetY > contentHeight - frameHeight {
-            page += 1
-            getFollowers(page: page)
+            getMoreFollowers()
         }
     }
 }
