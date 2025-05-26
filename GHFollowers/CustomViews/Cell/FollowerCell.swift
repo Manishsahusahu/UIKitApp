@@ -45,3 +45,4 @@ class FollowerCell: UICollectionViewCell {
         ])
     }
 }
+

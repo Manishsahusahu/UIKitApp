@@ -49,3 +49,4 @@ class GFAvatarImageView: UIImageView {
         }.resume()
     }
 }
+
