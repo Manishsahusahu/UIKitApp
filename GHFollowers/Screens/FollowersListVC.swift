@@ -72,7 +72,12 @@ class FollowersListVC: UIViewController {
             
             if self.followers.isEmpty {
                 let message = "No followers found for \(self.username)"
-                showGFEmptyStateView(message: message, view: view)
+                Task {
+                    await MainActor.run {
+                        self.showGFEmptyStateView(message: message, view: self.view)
+                    }
+                }
+                return
             }
             self.updateData(on: self.followers)
         }
