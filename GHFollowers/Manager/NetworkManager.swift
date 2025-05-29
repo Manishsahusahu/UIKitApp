@@ -53,4 +53,42 @@ class NetworkManager {
             }
         }.resume()
     }
+    
+    func getUserInfo(
+        for username: String,
+         completion: @escaping (User?, String?) -> Void
+    ) {
+        let urlString = "\(baseUrl)\(username)"
+        guard let url = URL(string: urlString) else {
+            completion(nil, "URL request failed. Please try again later.")
+            return
+        }
+        
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error {
+                completion(nil, error.localizedDescription)
+                return
+            }
+            
+            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+                completion(nil, "Invalid status code. Please try again.")
+                return
+            }
+            
+            guard let data else {
+                completion(nil, "Invalid data received. Please try again later.")
+                return
+            }
+            
+            do {
+                let decoder = JSONDecoder()
+                decoder.keyDecodingStrategy = .convertFromSnakeCase
+                let user = try decoder.decode(User.self, from: data)
+                
+                completion(user, nil)
+            } catch {
+                completion(nil, error.localizedDescription)
+            }
+        }.resume()
+    }
 }
