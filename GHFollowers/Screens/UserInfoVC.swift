@@ -10,19 +10,23 @@ import UIKit
 class UserInfoVC: UIViewController {
     let username: String
     var user: User? = nil
+    
+    let headerView = UIView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-    }
-    
-    init(username: String) {
-        self.username = username
-        super.init(nibName: nil, bundle: nil)
         
         view.backgroundColor = .systemBackground
         let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissVC))
         navigationItem.rightBarButtonItem = doneButton
         getUserInfo()
+        
+        layoutUI()
+    }
+    
+    init(username: String) {
+        self.username = username
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -49,6 +53,20 @@ class UserInfoVC: UIViewController {
             
             self.user = userInfo
         }
+    }
+    
+    private func layoutUI() {
+        view.addSubview(headerView)
+        
+        headerView.translatesAutoresizingMaskIntoConstraints = false
+        headerView.backgroundColor = .systemGray6
+        
+        NSLayoutConstraint.activate([
+            headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            headerView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            headerView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            headerView.heightAnchor.constraint(equalToConstant: 180)
+        ])
     }
     
 }
