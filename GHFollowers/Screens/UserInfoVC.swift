@@ -51,7 +51,12 @@ class UserInfoVC: UIViewController {
                 )
             }
             
-            self.user = userInfo
+            if let userInfo {
+                self.user = userInfo
+                Task { await MainActor.run {
+                    self.add(childVC: GFUserInfoHeaderVC(user: userInfo), to: self.headerView)
+                }}
+            }
         }
     }
     
@@ -59,7 +64,7 @@ class UserInfoVC: UIViewController {
         view.addSubview(headerView)
         
         headerView.translatesAutoresizingMaskIntoConstraints = false
-        headerView.backgroundColor = .systemGray6
+        headerView.backgroundColor = .systemBackground
         
         NSLayoutConstraint.activate([
             headerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -69,4 +74,10 @@ class UserInfoVC: UIViewController {
         ])
     }
     
+    private func add(childVC: UIViewController, to containerView: UIView) {
+        addChild(childVC)
+        containerView.addSubview(childVC.view)
+        childVC.view.frame = containerView.bounds
+        childVC.didMove(toParent: self)
+    }
 }
