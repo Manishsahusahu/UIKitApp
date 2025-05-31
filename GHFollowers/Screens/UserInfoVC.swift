@@ -7,6 +7,11 @@
 
 import UIKit
 
+protocol UserInfoVCDelegate: AnyObject {
+    func didTapGithubProfile()
+    func didTapGetFollowers()
+}
+
 class UserInfoVC: UIViewController {
     let username: String
     var user: User? = nil
@@ -58,13 +63,22 @@ class UserInfoVC: UIViewController {
             if let userInfo {
                 self.user = userInfo
                 Task { await MainActor.run {
-                    self.add(childVC: GFUserInfoHeaderVC(user: userInfo), to: self.headerView)
-                    self.add(childVC: GFItemRepoVC(user: userInfo), to: self.itemViewOne)
-                    self.add(childVC: GFItemFollowersVC(user: userInfo), to: self.itemViewTwo)
-                    self.dateLabel.text = "Github since \(userInfo.createdAt.convertToDisplayFormat())"
+                    self.configureUIElements(with: userInfo)
                 }}
             }
         }
+    }
+    
+    private func configureUIElements(with user: User) {
+        let repoVC = GFItemRepoVC(user: user)
+        repoVC.delegate = self
+        let followersVC = GFItemFollowersVC(user: user)
+        followersVC.delegate = self
+        
+        self.add(childVC: GFUserInfoHeaderVC(user: user), to: self.headerView)
+        self.add(childVC: repoVC, to: self.itemViewOne)
+        self.add(childVC: followersVC, to: self.itemViewTwo)
+        self.dateLabel.text = "Github since \(user.createdAt.convertToDisplayFormat())"
     }
     
     private func layoutUI() {
@@ -104,4 +118,15 @@ class UserInfoVC: UIViewController {
         childVC.view.frame = containerView.bounds
         childVC.didMove(toParent: self)
     }
+}
+
+extension UserInfoVC: UserInfoVCDelegate {
+    func didTapGithubProfile() {
+        
+    }
+    
+    func didTapGetFollowers() {
+        
+    }
+    
 }
