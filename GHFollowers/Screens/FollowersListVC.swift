@@ -135,10 +135,23 @@ class FollowersListVC: UIViewController {
             
             if let error {
                 self.PresentGFAlertOnMainThread(
-                    title: "Unable to fetch user info.",
-                    message: "",
+                    title: "Unable to fetch user.",
+                    message: error,
                     buttonTitle: "Ok"
                 )
+            }
+            
+            if let user {
+                let follower = Follower(login: user.login, avatarUrl: user.avatarUrl)
+                PersistenceManager.update(with: follower, actionType: .add) { [weak self] error in
+                    guard let self else { return }
+                    
+                    if let error {
+                        self.PresentGFAlertOnMainThread(title: "Failed", message: error, buttonTitle: "Ok")
+                    } else {
+                        self.PresentGFAlertOnMainThread(title: "Success", message: "Successfully marked user as favorite", buttonTitle: "Ok")
+                    }
+                }
             }
         }
     }

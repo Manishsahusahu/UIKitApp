@@ -19,7 +19,7 @@ enum PersistenceManager {
         case add, remove
     }
     
-    static func update(with follower: Follower, actionType: ActionType, completion: @escaping (Error?) -> Void) {
+    static func update(with follower: Follower, actionType: ActionType, completion: @escaping (String?) -> Void) {
         retreiveFavorites { result in
             switch result {
             case .success(let favorites):
@@ -29,16 +29,19 @@ enum PersistenceManager {
                 case .add:
                     if !favorites.contains(where: { $0.login == follower.login }) {
                         newFavs.append(follower)
+                    } else {
+                        completion("Already added.")
+                        return
                     }
                 case .remove:
                     newFavs.removeAll(where: { $0.login == follower.login })
                 }
                 
-                completion(save(favorites: newFavs))
+                completion(save(favorites: newFavs)?.localizedDescription)
                 return
                 
             case .failure(let error):
-                completion(error)
+                completion(error.localizedDescription)
                 return
             }
         }
