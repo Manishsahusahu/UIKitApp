@@ -39,6 +39,9 @@ class FollowersListVC: UIViewController {
     private func configureViewController() {
         view.backgroundColor = .systemBackground
         navigationController?.setNavigationBarHidden(false, animated: true)
+        
+        let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonTapped))
+        navigationItem.rightBarButtonItem = addButton
     }
     
     private func configureCollectionView() {
@@ -124,6 +127,20 @@ class FollowersListVC: UIViewController {
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         searchController.searchBar.delegate = self
+    }
+    
+    @objc private func addButtonTapped() {
+        NetworkManager.shared.getUserInfo(for: username) { [weak self] user, error in
+            guard let self else { return }
+            
+            if let error {
+                self.PresentGFAlertOnMainThread(
+                    title: "Unable to fetch user info.",
+                    message: "",
+                    buttonTitle: "Ok"
+                )
+            }
+        }
     }
 }
 
