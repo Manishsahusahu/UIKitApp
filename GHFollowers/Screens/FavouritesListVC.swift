@@ -20,7 +20,7 @@ class FavouritesListVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        getFavoritesData() 
+        getFavoritesData()
     }
     
     private func configureViewcontroller() {
@@ -73,5 +73,29 @@ extension FavouritesListVC: UITableViewDataSource, UITableViewDelegate {
         
         cell.set(favorite: favorite)
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let favorite = favorites[indexPath.row]
+        let destVC = FollowersListVC()
+        
+        destVC.username = favorite.login
+        destVC.title = favorite.login
+        
+        navigationController?.pushViewController(destVC, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        guard editingStyle == .delete else { return }
+        
+        let favoriteToDelete = favorites[indexPath.row]
+        favorites.remove(at: indexPath.row)
+        tableView.deleteRows(at: [indexPath], with: .left)
+        
+        PersistenceManager.update(with: favoriteToDelete, actionType: .remove) { [weak self] error in
+            guard let self, let error else { return }
+            
+            self.PresentGFAlertOnMainThread(title: "Unable to remove", message: "", buttonTitle: "Ok")
+        }
     }
 }
