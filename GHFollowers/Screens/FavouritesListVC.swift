@@ -15,6 +15,12 @@ class FavouritesListVC: UIViewController {
         super.viewDidLoad()
 
         configureViewcontroller()
+        configureTableView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        getFavoritesData() 
     }
     
     private func configureViewcontroller() {
@@ -39,9 +45,18 @@ class FavouritesListVC: UIViewController {
             
             switch result {
             case .success(let favorites):
-                self.favorites = favorites
+                if favorites.isEmpty {
+                    showGFEmptyStateView(message: "No Favorites Found", view: self.view)
+                } else {
+                    self.favorites = favorites
+                    
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                        self.view.bringSubviewToFront(self.tableView)
+                    }
+                }
             case .failure(let failure):
-                break
+                PresentGFAlertOnMainThread(title: "Unable to find favorites", message: failure.localizedDescription, buttonTitle: "Ok")
             }
         }
     }
