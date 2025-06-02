@@ -202,6 +202,7 @@ extension FollowersListVC: FollowerListVCDelegate {
         followers.removeAll()
         filteredFollowers.removeAll()
         getFollowers(page: page)
+        collectionView.scrollToItem(at: .init(row: 0, section: 0), at: .top, animated: true)
     }
     
 }
